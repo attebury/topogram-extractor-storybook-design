@@ -1,0 +1,30 @@
+{
+  "candidateKinds": [
+    "design_realization",
+    "stack"
+  ],
+  "capabilities": {
+    "componentRefs": true,
+    "designRealizations": true,
+    "storyMetadata": true
+  },
+  "compatibleCliRange": "^0.3.110",
+  "evidenceTypes": [
+    "runtime_source",
+    "parser_config"
+  ],
+  "extractors": [
+    "ui.storybook-design"
+  ],
+  "id": "@topogram/extractor-storybook-design",
+  "package": "@topogram/extractor-storybook-design",
+  "source": "package",
+  "stack": {
+    "domain": "ui",
+    "framework": "storybook"
+  },
+  "tracks": [
+    "ui"
+  ],
+  "version": "1"
+}
