@@ -40,7 +40,7 @@ test("exports a valid extractor adapter boundary", () => {
   assert.equal(adapter.manifest.id, "@topogram/extractor-storybook-design");
   assert.equal(adapter.manifest.source, "package");
   assert.deepEqual(adapter.manifest.tracks, ["ui"]);
-  assert.deepEqual(adapter.manifest.candidateKinds, ["design_realization", "stack"]);
+  assert.deepEqual(adapter.manifest.candidateKinds, ["design_realization", "widget", "stack"]);
   assert.equal(Array.isArray(adapter.extractors), true);
   assert.equal(adapter.extractors.length, 1);
   assert.equal(adapter.extractors[0].track, "ui");
@@ -80,6 +80,9 @@ test("CSF parameters.topogram emits one review-only design realization candidate
   assert.equal(detection.score, 0.9);
   const output = adapter.extractors[0].extract(context(root));
   assert.deepEqual(output.candidates.stacks, ["storybook"]);
+  assert.equal(output.candidates.widgets.length, 1);
+  assert.equal(output.candidates.widgets[0].id_hint, "widget_review_queue");
+  assert.equal(output.candidates.widgets[0].confidence, "low");
   assert.equal(output.candidates.design_realizations.length, 1);
   const candidate = output.candidates.design_realizations[0];
   assert.equal(candidate.widget_id, "widget_review_queue");

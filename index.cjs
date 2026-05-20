@@ -196,6 +196,21 @@ function storyCandidateFromMetadata(root, filePath, metadataBlock) {
   const platformSlug = idHintify(metadata.platform);
   const refSlug = idHintify(metadata.componentRef.split(".").slice(-1)[0] || metadata.componentRef);
   const realizationSet = metadata.realizationSet || `realization_set_${widgetSlug}`;
+  const evidence = [{ file: relative, reason: "Storybook CSF parameters.topogram maps widget to component ref" }];
+  const widgetCandidate = {
+    id_hint: metadata.widget,
+    label: titleCase(metadata.widget.replace(/^widget_/, "")),
+    confidence: "low",
+    source_kind: "storybook_design_metadata",
+    pattern: metadata.pattern,
+    region: metadata.pattern === "resource_table" ? "results" : "content",
+    data_prop: metadata.pattern === "resource_table" ? "rows" : "items",
+    evidence,
+    missing_decisions: [
+      "confirm reusable widget contract before adopting",
+      "confirm props, behaviors, events, and regions from product UI intent"
+    ]
+  };
   const candidate = {
     id_hint: `${widgetSlug}_${platformSlug}_${refSlug}`,
     realization_set_id_hint: realizationSet,
@@ -206,7 +221,7 @@ function storyCandidateFromMetadata(root, filePath, metadataBlock) {
     pattern: metadata.pattern,
     status: metadata.status,
     confidence: "high",
-    evidence: [{ file: relative, reason: "Storybook CSF parameters.topogram maps widget to component ref" }],
+    evidence,
     missing_decisions: metadata.realizationSet ? [] : ["confirm realization set grouping"],
     source_kind: "storybook_csf_metadata"
   };
@@ -220,7 +235,13 @@ function storyCandidateFromMetadata(root, filePath, metadataBlock) {
   if (metadata.behaviorsContractOnly.length > 0) candidate.behaviors_contract_only = metadata.behaviorsContractOnly;
   if (metadata.behaviorsImplementationOwned.length > 0) candidate.behaviors_implementation_owned = metadata.behaviorsImplementationOwned;
   if (metadata.behaviorsUnsupported.length > 0) candidate.behaviors_unsupported = metadata.behaviorsUnsupported;
-  return { candidate };
+  return { candidate, widgetCandidate };
+}
+
+function titleCase(value) {
+  return String(value || "")
+    .replace(/[_-]+/g, " ")
+    .replace(/\b\w/g, (match) => match.toUpperCase());
 }
 
 function sourceSummary(root) {
@@ -255,6 +276,7 @@ exports.extractors = [{
     const findings = [];
     const diagnostics = [];
     const designRealizations = [];
+    const widgets = [];
 
     if (summary.hasGeneratedStorybookOutput) {
       diagnostics.push({
@@ -287,6 +309,7 @@ exports.extractors = [{
       }
       const parsed = storyCandidateFromMetadata(root, filePath, metadataBlock);
       if (parsed.candidate) designRealizations.push(parsed.candidate);
+      if (parsed.widgetCandidate) widgets.push(parsed.widgetCandidate);
       if (parsed.finding) findings.push(parsed.finding);
     }
 
@@ -294,6 +317,7 @@ exports.extractors = [{
       findings,
       candidates: {
         design_realizations: designRealizations,
+        widgets,
         stacks: summary.hasDependency || summary.mainFiles.length > 0 || summary.storyFiles.length > 0 ? ["storybook"] : []
       },
       diagnostics

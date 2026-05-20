@@ -44,6 +44,9 @@ The extractor emits `design_realizations` only when `widget`,
 `designContract`, `componentRef`, `platform`, `pattern`, and `status` are
 explicit. Incomplete stories become findings with missing-decision guidance.
 `componentRef` is a stable design-system identity, not a source import path.
+When the story names a widget, the extractor also emits a low-confidence widget
+review candidate so adoption can either link to an existing widget or make the
+missing semantic-widget decision visible.
 
 ## Consumer Loop
 

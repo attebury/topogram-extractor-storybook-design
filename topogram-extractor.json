@@ -1,6 +1,7 @@
 {
   "candidateKinds": [
     "design_realization",
+    "widget",
     "stack"
   ],
   "capabilities": {
