@@ -17,6 +17,7 @@ This repository is a Topogram extractor pack for static Storybook CSF component 
 - Keep candidate evidence project-relative and portable.
 - Use scalar `stacks: ["framework"]` and `frameworks: ["tool"]` metadata buckets.
 - Emit `component_mappings` only from explicit `parameters.topogram` story metadata.
+- Use only canonical Topogram widget or embedded patterns in component mapping candidates. Unknown patterns and layout/shell patterns such as `app_header`, `primary_navigation`, and `footer_bar` should become findings with missing-decision guidance.
 - Treat MDX, generated `storybook-static`, screenshots, and runtime Storybook execution as out of scope for v1.
 - Never use source import paths as canonical `component_ref` values.
 - Keep `llms.txt` and `llms-full.txt` current when README or agent guidance changes.

@@ -117,6 +117,44 @@ test("incomplete Storybook metadata emits findings instead of adoptable candidat
   assert.match(output.findings[0].message, /missing: widget, designLanguage/);
 });
 
+test("unsupported and layout shell patterns emit findings instead of candidates", () => {
+  const root = writeFixture({
+    "src/UnsupportedPattern.stories.tsx": `export default {
+      parameters: {
+        topogram: {
+          widget: "widget_summary",
+          designLanguage: "design_acme_product_ui",
+          componentRef: "acme.summary.card",
+          platform: "web",
+          pattern: "summary_card",
+          status: "rendered"
+        }
+      }
+    };
+`,
+    "src/ShellPattern.stories.tsx": `export default {
+      parameters: {
+        topogram: {
+          widget: "widget_app_header",
+          designLanguage: "design_acme_product_ui",
+          componentRef: "acme.shell.header",
+          platform: "web",
+          pattern: "app_header",
+          status: "rendered"
+        }
+      }
+    };
+`
+  });
+  const output = adapter.extractors[0].extract(context(root));
+  assert.deepEqual(output.candidates.component_mappings, []);
+  assert.deepEqual(output.candidates.widgets, []);
+  const patternFindings = output.findings.filter((finding) => finding.kind === "storybook_topogram_pattern_unsupported");
+  assert.equal(patternFindings.length, 2);
+  assert.match(patternFindings[0].message, /summary_card|app_header/);
+  assert.equal(patternFindings.some((finding) => /layout\/shell pattern 'app_header'/.test(finding.message)), true);
+});
+
 test("missing metadata and MDX stories are findings, not candidates", () => {
   const root = writeFixture({
     "src/Plain.stories.tsx": "export default { title: 'Plain' };\n",

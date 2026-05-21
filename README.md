@@ -48,6 +48,16 @@ When the story names a widget, the extractor also emits a low-confidence widget
 review candidate so adoption can either link to an existing widget or make the
 missing semantic-widget decision visible.
 
+`pattern` must be a canonical Topogram widget or embedded pattern. Rendered
+widget patterns include `resource_table`, `data_grid_view`, `resource_cards`,
+`search_results`, `detail_panel`, `summary_stats`, `board_view`,
+`calendar_view`, `activity_feed`, `timeline_view`, `edit_form`, `filter_panel`,
+`action_bar`, `empty_state_panel`, `settings_section`, `wizard_stepper`,
+`comment_thread`, and `audit_log`. Embedded patterns are `lookup_select` and
+`status_badge`. Layout/shell patterns such as `app_header`,
+`primary_navigation`, and `footer_bar` become findings because they belong in
+screen, layout, region, route, or action evidence, not component mappings.
+
 ## Consumer Loop
 
 ```bash

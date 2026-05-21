@@ -22,6 +22,36 @@ const IGNORED_DIRS = new Set([
 const STORY_FILE_PATTERN = /\.stories\.(js|jsx|ts|tsx)$/i;
 const MDX_STORY_PATTERN = /\.stories\.mdx$/i;
 const STORYBOOK_MAIN_PATTERN = /(^|\/)\.storybook\/main\.(js|cjs|mjs|ts)$/i;
+const RENDERED_WIDGET_PATTERNS = new Set([
+  "resource_table",
+  "data_grid_view",
+  "resource_cards",
+  "search_results",
+  "detail_panel",
+  "summary_stats",
+  "board_view",
+  "calendar_view",
+  "activity_feed",
+  "timeline_view",
+  "edit_form",
+  "filter_panel",
+  "action_bar",
+  "empty_state_panel",
+  "settings_section",
+  "wizard_stepper",
+  "comment_thread",
+  "audit_log"
+]);
+const EMBEDDED_PATTERNS = new Set(["lookup_select", "status_badge"]);
+const LAYOUT_SHELL_PATTERNS = new Set([
+  "app_header",
+  "primary_navigation",
+  "hamburger_drawer",
+  "content_region",
+  "footer_bar",
+  "inspector_pane",
+  "master_detail"
+]);
 
 function rootDir(context) {
   return context.paths.inputRoot || context.paths.workspaceRoot || process.cwd();
@@ -159,6 +189,13 @@ function topogramMetadataForStory(text) {
   return findObjectBlockAfter(text, /\btopogram\s*:/);
 }
 
+function patternCategory(pattern) {
+  if (RENDERED_WIDGET_PATTERNS.has(pattern || "")) return "rendered";
+  if (EMBEDDED_PATTERNS.has(pattern || "")) return "embedded";
+  if (LAYOUT_SHELL_PATTERNS.has(pattern || "")) return "layout_shell";
+  return "unsupported";
+}
+
 function storyCandidateFromMetadata(root, filePath, metadataBlock) {
   const relative = normalizeRelative(root, filePath);
   const metadata = {
@@ -189,6 +226,21 @@ function storyCandidateFromMetadata(root, filePath, metadataBlock) {
         message: `Storybook topogram metadata in ${relative} is missing: ${missing.join(", ")}.`,
         evidence: [{ file: relative, reason: "parameters.topogram is present but incomplete" }],
         missing_decisions: missing.map((key) => `set parameters.topogram.${key}`)
+      }
+    };
+  }
+  const category = patternCategory(metadata.pattern);
+  if (category === "unsupported" || category === "layout_shell") {
+    return {
+      finding: {
+        kind: "storybook_topogram_pattern_unsupported",
+        message: category === "layout_shell"
+          ? `Storybook topogram metadata in ${relative} uses layout/shell pattern '${metadata.pattern}' as a component mapping.`
+          : `Storybook topogram metadata in ${relative} uses unknown Topogram pattern '${metadata.pattern}'.`,
+        evidence: [{ file: relative, reason: "parameters.topogram.pattern is not a widget/component mapping pattern" }],
+        missing_decisions: category === "layout_shell"
+          ? ["emit layout/shell evidence as screen, layout, region, route, or action context"]
+          : ["choose a canonical Topogram widget or embedded pattern"]
       }
     };
   }
