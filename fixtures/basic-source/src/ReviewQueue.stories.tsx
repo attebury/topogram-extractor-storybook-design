@@ -6,8 +6,8 @@ export default {
   parameters: {
     topogram: {
       widget: "widget_review_queue",
-      designContract: "design_acme_product_ui",
-      realizationSet: "realization_set_review_queue",
+      designLanguage: "design_acme_product_ui",
+      componentMap: "component_map_review_queue",
       componentRef: "acme.reviewQueue.grid",
       platform: "web",
       viewport: "wide",

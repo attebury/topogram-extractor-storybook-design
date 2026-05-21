@@ -1,7 +1,7 @@
 {
-  "description": "Package-backed Topogram extractor for Storybook design realization evidence.",
+  "description": "Package-backed Topogram extractor for Storybook component mapping evidence.",
   "devDependencies": {
-    "@topogram/cli": "^0.3.113"
+    "@topogram/cli": "^0.3.114"
   },
   "exports": {
     ".": "./index.cjs",
@@ -38,5 +38,5 @@
     "test": "node --test",
     "verify": "npm run release:preflight"
   },
-  "version": "0.1.0"
+  "version": "0.1.1"
 }

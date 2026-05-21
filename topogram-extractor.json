@@ -1,15 +1,15 @@
 {
   "candidateKinds": [
-    "design_realization",
+    "component_mapping",
     "widget",
     "stack"
   ],
   "capabilities": {
     "componentRefs": true,
-    "designRealizations": true,
-    "storyMetadata": true
+    "storyMetadata": true,
+    "componentMappings": true
   },
-  "compatibleCliRange": "^0.3.110",
+  "compatibleCliRange": "^0.3.114",
   "evidenceTypes": [
     "runtime_source",
     "parser_config"

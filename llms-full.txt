@@ -2,7 +2,7 @@
 
 # @topogram/extractor-storybook-design
 
-> Static Storybook CSF extractor that proposes review-only Topogram design realization candidates.
+> Static Storybook CSF extractor that proposes review-only Topogram component mapping candidates.
 
 Use these commands:
 
@@ -32,7 +32,7 @@ Use these commands:
 
 # @topogram/extractor-storybook-design
 
-> Package-backed Topogram extractor for static Storybook CSF design realization evidence.
+> Package-backed Topogram extractor for static Storybook CSF component mapping evidence.
 
 Status: current
 Audience: extractor authors, front-end leads, designers, and agents
@@ -53,8 +53,8 @@ export default {
   parameters: {
     topogram: {
       widget: "widget_review_queue",
-      designContract: "design_acme_product_ui",
-      realizationSet: "realization_set_review_queue",
+      designLanguage: "design_acme_product_ui",
+      componentMap: "component_map_review_queue",
       componentRef: "acme.reviewQueue.grid",
       platform: "web",
       viewport: "wide",
@@ -72,8 +72,8 @@ export default {
 };
 ```
 
-The extractor emits `design_realizations` only when `widget`,
-`designContract`, `componentRef`, `platform`, `pattern`, and `status` are
+The extractor emits `component_mappings` only when `widget`,
+`designLanguage`, `componentRef`, `platform`, `pattern`, and `status` are
 explicit. Incomplete stories become findings with missing-decision guidance.
 `componentRef` is a stable design-system identity, not a source import path.
 When the story names a widget, the extractor also emits a low-confidence widget
@@ -89,12 +89,12 @@ topogram extractor check @topogram/extractor-storybook-design
 topogram extract ./component-library --out ./extracted-topogram --from ui --extractor @topogram/extractor-storybook-design
 topogram extract plan ./extracted-topogram --json
 topogram adopt --list ./extracted-topogram --json
-topogram adopt design-realizations ./extracted-topogram --dry-run --json
-topogram adopt design-realizations ./extracted-topogram --write --json
+topogram adopt component-mappings ./extracted-topogram --dry-run --json
+topogram adopt component-mappings ./extracted-topogram --write --json
 ```
 
 Extraction writes review candidates and provenance only. Canonical
-`design_realization_set` records are written only through explicit Topogram
+`design_component_map` records are written only through explicit Topogram
 adoption.
 
 ## Author Loop
@@ -141,7 +141,7 @@ Status: current
 Audience: coding agents and humans maintaining this extractor package
 Use when: you are editing extractor detection, extraction, fixtures, package metadata, or verification in this repo.
 
-This repository is a Topogram extractor pack for static Storybook CSF design realization evidence on the `ui` track.
+This repository is a Topogram extractor pack for static Storybook CSF component mapping evidence on the `ui` track.
 
 ## Rules
 
@@ -151,7 +151,7 @@ This repository is a Topogram extractor pack for static Storybook CSF design rea
 - Return review-only `findings`, `candidates`, and `diagnostics`; Topogram core owns persistence, reconcile, adoption, and canonical writes.
 - Keep candidate evidence project-relative and portable.
 - Use scalar `stacks: ["framework"]` and `frameworks: ["tool"]` metadata buckets.
-- Emit `design_realizations` only from explicit `parameters.topogram` story metadata.
+- Emit `component_mappings` only from explicit `parameters.topogram` story metadata.
 - Treat MDX, generated `storybook-static`, screenshots, and runtime Storybook execution as out of scope for v1.
 - Never use source import paths as canonical `component_ref` values.
 - Keep `llms.txt` and `llms-full.txt` current when README or agent guidance changes.

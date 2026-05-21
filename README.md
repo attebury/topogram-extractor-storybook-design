@@ -1,6 +1,6 @@
 # @topogram/extractor-storybook-design
 
-> Package-backed Topogram extractor for static Storybook CSF design realization evidence.
+> Package-backed Topogram extractor for static Storybook CSF component mapping evidence.
 
 Status: current
 Audience: extractor authors, front-end leads, designers, and agents
@@ -21,8 +21,8 @@ export default {
   parameters: {
     topogram: {
       widget: "widget_review_queue",
-      designContract: "design_acme_product_ui",
-      realizationSet: "realization_set_review_queue",
+      designLanguage: "design_acme_product_ui",
+      componentMap: "component_map_review_queue",
       componentRef: "acme.reviewQueue.grid",
       platform: "web",
       viewport: "wide",
@@ -40,8 +40,8 @@ export default {
 };
 ```
 
-The extractor emits `design_realizations` only when `widget`,
-`designContract`, `componentRef`, `platform`, `pattern`, and `status` are
+The extractor emits `component_mappings` only when `widget`,
+`designLanguage`, `componentRef`, `platform`, `pattern`, and `status` are
 explicit. Incomplete stories become findings with missing-decision guidance.
 `componentRef` is a stable design-system identity, not a source import path.
 When the story names a widget, the extractor also emits a low-confidence widget
@@ -57,12 +57,12 @@ topogram extractor check @topogram/extractor-storybook-design
 topogram extract ./component-library --out ./extracted-topogram --from ui --extractor @topogram/extractor-storybook-design
 topogram extract plan ./extracted-topogram --json
 topogram adopt --list ./extracted-topogram --json
-topogram adopt design-realizations ./extracted-topogram --dry-run --json
-topogram adopt design-realizations ./extracted-topogram --write --json
+topogram adopt component-mappings ./extracted-topogram --dry-run --json
+topogram adopt component-mappings ./extracted-topogram --write --json
 ```
 
 Extraction writes review candidates and provenance only. Canonical
-`design_realization_set` records are written only through explicit Topogram
+`design_component_map` records are written only through explicit Topogram
 adoption.
 
 ## Author Loop

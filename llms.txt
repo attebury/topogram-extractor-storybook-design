@@ -1,6 +1,6 @@
 # @topogram/extractor-storybook-design
 
-> Static Storybook CSF extractor that proposes review-only Topogram design realization candidates.
+> Static Storybook CSF extractor that proposes review-only Topogram component mapping candidates.
 
 Use these commands:
 

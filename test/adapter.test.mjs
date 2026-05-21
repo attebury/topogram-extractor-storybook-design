@@ -40,7 +40,7 @@ test("exports a valid extractor adapter boundary", () => {
   assert.equal(adapter.manifest.id, "@topogram/extractor-storybook-design");
   assert.equal(adapter.manifest.source, "package");
   assert.deepEqual(adapter.manifest.tracks, ["ui"]);
-  assert.deepEqual(adapter.manifest.candidateKinds, ["design_realization", "widget", "stack"]);
+  assert.deepEqual(adapter.manifest.candidateKinds, ["component_mapping", "widget", "stack"]);
   assert.equal(Array.isArray(adapter.extractors), true);
   assert.equal(adapter.extractors.length, 1);
   assert.equal(adapter.extractors[0].track, "ui");
@@ -48,7 +48,7 @@ test("exports a valid extractor adapter boundary", () => {
   assert.equal(typeof adapter.extractors[0].extract, "function");
 });
 
-test("CSF parameters.topogram emits one review-only design realization candidate", () => {
+test("CSF parameters.topogram emits one review-only component mapping candidate", () => {
   const root = writeFixture({
     "package.json": JSON.stringify({ devDependencies: { "@storybook/react": "^8.0.0" } }, null, 2),
     ".storybook/main.ts": "export default { stories: ['../src/**/*.stories.tsx'] };\n",
@@ -57,8 +57,8 @@ test("CSF parameters.topogram emits one review-only design realization candidate
       parameters: {
         topogram: {
           widget: "widget_review_queue",
-          designContract: "design_acme_product_ui",
-          realizationSet: "realization_set_review_queue",
+          designLanguage: "design_acme_product_ui",
+          componentMap: "component_map_review_queue",
           componentRef: "acme.reviewQueue.grid",
           platform: "web",
           viewport: "wide",
@@ -83,11 +83,11 @@ test("CSF parameters.topogram emits one review-only design realization candidate
   assert.equal(output.candidates.widgets.length, 1);
   assert.equal(output.candidates.widgets[0].id_hint, "widget_review_queue");
   assert.equal(output.candidates.widgets[0].confidence, "low");
-  assert.equal(output.candidates.design_realizations.length, 1);
-  const candidate = output.candidates.design_realizations[0];
+  assert.equal(output.candidates.component_mappings.length, 1);
+  const candidate = output.candidates.component_mappings[0];
   assert.equal(candidate.widget_id, "widget_review_queue");
-  assert.equal(candidate.design_contract_id_hint, "design_acme_product_ui");
-  assert.equal(candidate.realization_set_id_hint, "realization_set_review_queue");
+  assert.equal(candidate.design_language_id_hint, "design_acme_product_ui");
+  assert.equal(candidate.component_map_id_hint, "component_map_review_queue");
   assert.equal(candidate.component_ref, "acme.reviewQueue.grid");
   assert.equal(candidate.platform, "web");
   assert.deepEqual(candidate.state_coverage, ["empty", "loading", "populated"]);
@@ -112,9 +112,9 @@ test("incomplete Storybook metadata emits findings instead of adoptable candidat
 `
   });
   const output = adapter.extractors[0].extract(context(root));
-  assert.deepEqual(output.candidates.design_realizations, []);
+  assert.deepEqual(output.candidates.component_mappings, []);
   assert.equal(output.findings.some((finding) => finding.kind === "storybook_topogram_metadata_incomplete"), true);
-  assert.match(output.findings[0].message, /missing: widget, designContract/);
+  assert.match(output.findings[0].message, /missing: widget, designLanguage/);
 });
 
 test("missing metadata and MDX stories are findings, not candidates", () => {
@@ -124,7 +124,7 @@ test("missing metadata and MDX stories are findings, not candidates", () => {
     "storybook-static/index.html": "<html></html>\n"
   });
   const output = adapter.extractors[0].extract(context(root));
-  assert.deepEqual(output.candidates.design_realizations, []);
+  assert.deepEqual(output.candidates.component_mappings, []);
   assert.equal(output.findings.some((finding) => finding.kind === "storybook_topogram_metadata_missing"), true);
   assert.equal(output.findings.some((finding) => finding.kind === "storybook_mdx_unsupported"), true);
   assert.equal(output.diagnostics.some((diagnostic) => /storybook-static/.test(diagnostic.message)), true);

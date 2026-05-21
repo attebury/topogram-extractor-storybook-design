@@ -163,8 +163,8 @@ function storyCandidateFromMetadata(root, filePath, metadataBlock) {
   const relative = normalizeRelative(root, filePath);
   const metadata = {
     widget: readStringField(metadataBlock, "widget"),
-    designContract: readStringField(metadataBlock, "designContract", "design_contract"),
-    realizationSet: readStringField(metadataBlock, "realizationSet", "realization_set"),
+    designLanguage: readStringField(metadataBlock, "designLanguage", "design_language"),
+    componentMap: readStringField(metadataBlock, "componentMap", "component_map"),
     componentRef: readStringField(metadataBlock, "componentRef", "component_ref"),
     platform: readStringField(metadataBlock, "platform"),
     viewport: readStringField(metadataBlock, "viewport"),
@@ -180,7 +180,7 @@ function storyCandidateFromMetadata(root, filePath, metadataBlock) {
     behaviorsImplementationOwned: readArrayField(metadataBlock, "behaviorsImplementationOwned", "behaviors_implementation_owned"),
     behaviorsUnsupported: readArrayField(metadataBlock, "behaviorsUnsupported", "behaviors_unsupported")
   };
-  const required = ["widget", "designContract", "componentRef", "platform", "pattern", "status"];
+  const required = ["widget", "designLanguage", "componentRef", "platform", "pattern", "status"];
   const missing = required.filter((key) => !metadata[key]);
   if (missing.length > 0) {
     return {
@@ -195,7 +195,7 @@ function storyCandidateFromMetadata(root, filePath, metadataBlock) {
   const widgetSlug = idHintify(metadata.widget.replace(/^widget_/, ""));
   const platformSlug = idHintify(metadata.platform);
   const refSlug = idHintify(metadata.componentRef.split(".").slice(-1)[0] || metadata.componentRef);
-  const realizationSet = metadata.realizationSet || `realization_set_${widgetSlug}`;
+  const componentMap = metadata.componentMap || `component_map_${widgetSlug}`;
   const evidence = [{ file: relative, reason: "Storybook CSF parameters.topogram maps widget to component ref" }];
   const widgetCandidate = {
     id_hint: metadata.widget,
@@ -213,8 +213,8 @@ function storyCandidateFromMetadata(root, filePath, metadataBlock) {
   };
   const candidate = {
     id_hint: `${widgetSlug}_${platformSlug}_${refSlug}`,
-    realization_set_id_hint: realizationSet,
-    design_contract_id_hint: metadata.designContract,
+    component_map_id_hint: componentMap,
+    design_language_id_hint: metadata.designLanguage,
     widget_id: metadata.widget,
     platform: metadata.platform,
     component_ref: metadata.componentRef,
@@ -222,7 +222,7 @@ function storyCandidateFromMetadata(root, filePath, metadataBlock) {
     status: metadata.status,
     confidence: "high",
     evidence,
-    missing_decisions: metadata.realizationSet ? [] : ["confirm realization set grouping"],
+    missing_decisions: metadata.componentMap ? [] : ["confirm component map grouping"],
     source_kind: "storybook_csf_metadata"
   };
   if (metadata.viewport) candidate.viewport = metadata.viewport;
@@ -303,7 +303,7 @@ exports.extractors = [{
           kind: "storybook_topogram_metadata_missing",
           message: `Storybook story ${normalizeRelative(root, filePath)} has no parameters.topogram metadata.`,
           evidence: [{ file: normalizeRelative(root, filePath), reason: "CSF story has no explicit Topogram design metadata" }],
-          missing_decisions: ["add explicit parameters.topogram metadata before adopting a design realization"]
+          missing_decisions: ["add explicit parameters.topogram metadata before adopting a component mapping"]
         });
         continue;
       }
@@ -316,7 +316,7 @@ exports.extractors = [{
     return {
       findings,
       candidates: {
-        design_realizations: designRealizations,
+        component_mappings: designRealizations,
         widgets,
         stacks: summary.hasDependency || summary.mainFiles.length > 0 || summary.storyFiles.length > 0 ? ["storybook"] : []
       },

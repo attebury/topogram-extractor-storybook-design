@@ -6,7 +6,7 @@ Status: current
 Audience: coding agents and humans maintaining this extractor package
 Use when: you are editing extractor detection, extraction, fixtures, package metadata, or verification in this repo.
 
-This repository is a Topogram extractor pack for static Storybook CSF design realization evidence on the `ui` track.
+This repository is a Topogram extractor pack for static Storybook CSF component mapping evidence on the `ui` track.
 
 ## Rules
 
@@ -16,7 +16,7 @@ This repository is a Topogram extractor pack for static Storybook CSF design rea
 - Return review-only `findings`, `candidates`, and `diagnostics`; Topogram core owns persistence, reconcile, adoption, and canonical writes.
 - Keep candidate evidence project-relative and portable.
 - Use scalar `stacks: ["framework"]` and `frameworks: ["tool"]` metadata buckets.
-- Emit `design_realizations` only from explicit `parameters.topogram` story metadata.
+- Emit `component_mappings` only from explicit `parameters.topogram` story metadata.
 - Treat MDX, generated `storybook-static`, screenshots, and runtime Storybook execution as out of scope for v1.
 - Never use source import paths as canonical `component_ref` values.
 - Keep `llms.txt` and `llms-full.txt` current when README or agent guidance changes.
